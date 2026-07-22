@@ -13,15 +13,15 @@ import nltk
 def get_stopwords():
     nltk.download('stopwords')
 
-st.set_page_config(page_title="Chat with a friend on the works of Rabindranath Tagore", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
-st.title("Chat with a friend on the works of Rabindranath Tagore")
+st.set_page_config(page_title="Chat with a friend about the AI Center", page_icon="🖥️", layout="centered", initial_sidebar_state="auto", menu_items=None)
+st.title("Chat with with a friend about the AI Centerfor Civic and Social Good ")
 
 
 if "messages" not in st.session_state.keys():  # Initialize the chat messages history
     st.session_state.messages = [
         {
             "role": "assistant",
-            "content": "Ask me a question about Rabindranath Tagore!!",
+            "content": "Ask me a question about the AI Center!!",
         }
     ]
 
@@ -31,8 +31,8 @@ def load_data():
     docs = reader.load_data()
     
 
-    Settings.chunk_size = 1500
-    Settings.chunk_overlap = 50
+    Settings.chunk_size = 2500
+    Settings.chunk_overlap = 100
     Settings.embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5",
     embed_batch_size=20,
     token=st.secrets.hftoken,
@@ -42,12 +42,12 @@ def load_data():
     Settings.llm = HuggingFaceInferenceAPI(
     model_name="Qwen/Qwen2.5-1.5B-Instruct",
     token=st.secrets.hftoken,
-    generate_kwargs={"temperature": 0.7, "top_k": 50, "top_p": 0.95},
+    generate_kwargs={"temperature": 0.8, "top_k": 50, "top_p": 0.95},
     provider="auto",  # this will use the best provider available
-    system_prompt="""You are an expert on the work of Rabindranath Tagore.
-    Answer the question using the provided documents, which contain relevant excerpts from the work of Rabindranath Tagore.
+    system_prompt="""You are an expert on the AI CENTER at SJSU .
+    Answer the question using the provided documents, which contain relevant to the AI Center  for Civic and Social Good.
     The context for all questions is the work of Rabindranath Tagore. Whenever possible, include a quotation from the provided excerpts of his work to illustrate your point.
-    Respond using a florid but direct tone, typical of an early modernist writer.
+    Respond using a intellectual tone- you are an AI fanatic .
     Respond in fewer than 100 words.""",
     )
     index = VectorStoreIndex.from_documents(docs)
