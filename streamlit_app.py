@@ -60,14 +60,60 @@ if "chat_engine" not in st.session_state.keys():  # Initialize the chat engine
         chat_mode="condense_plus_context", verbose=True, streaming=False,
     )
 
-if prompt := st.chat_input(
-    "Ask a question"
-):  # Prompt for user input and save to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
+
+# -------------------- IMAGE UPLOAD ADDED --------------------
+
+submission = st.chat_input(
+    "Ask a question or attach an image",
+    accept_file=True,
+    file_type=["png", "jpg", "jpeg", "webp"],
+)
+
+prompt = None
+
+if submission:
+    prompt = submission.text
+
+    uploaded_images = []
+
+    for uploaded_file in submission.files:
+        uploaded_images.append(
+            {
+                "name": uploaded_file.name,
+                "type": uploaded_file.type,
+                "data": uploaded_file.getvalue(),
+            }
+        )
+
+    # Give the text-only chatbot something to process when only an image
+    # is submitted.
+    if not prompt and uploaded_images:
+        prompt = "The user uploaded an image."
+
+    st.session_state.messages.append(
+        {
+            "role": "user",
+            "content": prompt,
+            "images": uploaded_images,
+        }
+    )
+
+# ------------------ END IMAGE UPLOAD ADDED ------------------
+
 
 for message in st.session_state.messages:  # Write message history to UI
     with st.chat_message(message["role"]):
         st.write(message["content"])
+
+        # ---------------- IMAGE DISPLAY ADDED ----------------
+        for image in message.get("images", []):
+            st.image(
+                image["data"],
+                caption=image["name"],
+                use_container_width=True,
+            )
+        # -------------- END IMAGE DISPLAY ADDED --------------
+
 
 # If last message is not from assistant, generate a new response
 if st.session_state.messages[-1]["role"] != "assistant":
@@ -91,3 +137,5 @@ if st.session_state.messages[-1]["role"] != "assistant":
             message = {"role": "assistant", "content": response_stream.response}
             # Add response to message history
             st.session_state.messages.append(message)
+```
+
