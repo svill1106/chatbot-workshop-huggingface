@@ -31,8 +31,8 @@ def load_data():
     docs = reader.load_data()
     
 
-    Settings.chunk_size = 2500
-    Settings.chunk_overlap = 100
+    Settings.chunk_size = 1500
+    Settings.chunk_overlap = 50
     Settings.embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5",
     embed_batch_size=20,
     token=st.secrets.hftoken,
